@@ -259,7 +259,7 @@ export default function Shop() {
       const data = await response.json();
 
       if (response.ok) {
-        setSubmitMessage('Thank you! Your design request has been submitted. We\'ll get back to you via email soon.');
+        setSubmitMessage('🌟 Thank you for connecting with us! We will design your unique cosmic creation and send it to your email within 24 hours. Get ready to wear your cosmic identity! ✨');
         // Reset form
         setFormData({
           name: '',
