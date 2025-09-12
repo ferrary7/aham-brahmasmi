@@ -189,7 +189,7 @@ export default function Home() {
                   lineHeight: '1.6',
                   fontSize: '1rem'
                 }}>
-                  Inspired by Indian mythology & astrology, unique mandala & symbolic art, we create one-of-a-kind design in bring it back to you in 24 hours.
+                  Inspired by Indian mythology & astrology, unique mandala & symbolic art, we create one-of-a-kind design in bringing it back to you in 24 hours.
                 </p>
               </div>
               

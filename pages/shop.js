@@ -202,7 +202,8 @@ export default function Shop() {
     email: '',
     size: '',
     dateOfBirth: '',
-    zodiacSign: ''
+    zodiacSign: '',
+    address: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
@@ -266,7 +267,8 @@ export default function Shop() {
           email: '',
           size: '',
           dateOfBirth: '',
-          zodiacSign: ''
+          zodiacSign: '',
+          address: ''
         });
       } else {
         setSubmitMessage(data.message || 'Failed to submit request. Please try again.');
@@ -575,14 +577,15 @@ export default function Shop() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: 'rgba(255, 255, 255, 0.05)',
+                      background: '#181818',
                       border: '1px solid rgba(212, 160, 23, 0.3)',
                       borderRadius: '8px',
-                      color: 'var(--color-text)',
+                      color: '#fff',
                       fontSize: '1rem',
                       transition: 'border-color 0.3s ease',
                       outline: 'none',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      appearance: 'none',
                     }}
                   >
                     <option value="">Select your size</option>
@@ -626,6 +629,7 @@ export default function Shop() {
                   />
                 </div>
 
+
                 {/* Zodiac Sign/Rashi Field */}
                 <div>
                   <label style={{
@@ -645,14 +649,15 @@ export default function Shop() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: 'rgba(255, 255, 255, 0.05)',
+                      background: '#181818',
                       border: '1px solid rgba(212, 160, 23, 0.3)',
                       borderRadius: '8px',
-                      color: 'var(--color-text)',
+                      color: '#fff',
                       fontSize: '1rem',
                       transition: 'border-color 0.3s ease',
                       outline: 'none',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      appearance: 'none',
                     }}
                   >
                     <option value="">Select your zodiac sign</option>
@@ -669,6 +674,40 @@ export default function Shop() {
                     <option value="aquarius">Aquarius (Kumbha)</option>
                     <option value="pisces">Pisces (Meena)</option>
                   </select>
+                </div>
+
+                {/* Address Field */}
+                <div>
+                  <label style={{
+                    display: 'block',
+                    color: 'var(--color-gold)',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    marginBottom: '8px',
+                    fontFamily: 'Cinzel, serif'
+                  }}>
+                    Address *
+                  </label>
+                  <textarea
+                    name="address"
+                    required
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(212, 160, 23, 0.3)',
+                      borderRadius: '8px',
+                      color: 'var(--color-text)',
+                      fontSize: '1rem',
+                      minHeight: '60px',
+                      transition: 'border-color 0.3s ease',
+                      outline: 'none',
+                      resize: 'vertical'
+                    }}
+                    placeholder="Enter your full address for delivery"
+                  />
                 </div>
 
                 {/* Submit Button */}

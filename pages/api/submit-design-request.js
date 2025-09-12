@@ -6,12 +6,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, size, dateOfBirth, zodiacSign } = req.body;
+  const { name, email, size, dateOfBirth, zodiacSign, address } = req.body;
 
     // Validate required fields
-    if (!name || !email) {
+    if (!name || !email || !address) {
       return res.status(400).json({
-        message: 'Name and email are required'
+        message: 'Name, email, and address are required'
       });
     }
 
@@ -42,13 +42,14 @@ export default async function handler(req, res) {
       email,
       size || '',
       dateOfBirth || '',
-      zodiacSign || ''
+      zodiacSign || '',
+      address
     ]];
 
     // Append data to Google Sheet
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'Sheet1!A:F', // Adjust range as needed
+      range: 'Sheet1!A:G', // Now includes address column
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
       resource: {
