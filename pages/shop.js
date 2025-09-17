@@ -286,8 +286,8 @@ export default function Shop() {
     {
       id: 1,
       name: "Sacred Hoodie",
-      originalPrice: "Rs. 1299",
-      price: "Rs. 799",
+      originalPrice: "Rs. 2099",
+      price: "Rs. 1299",
       image: "/assets/marce-no-bg.png",
       alt: "Personalised Hoodie with cosmic design",
       description: "Premium cotton hoodie featuring intricate mandala patterns."
@@ -295,8 +295,8 @@ export default function Shop() {
     {
       id: 2,
       name: "Cosmic Hoodie",
-      originalPrice: "Rs. 1299",
-      price: "Rs. 799",
+      originalPrice: "Rs. 2099",
+      price: "Rs. 1299",
       image: "/assets/mesha-no-bg.png",
       alt: "Cosmic Tee featuring mystical patterns",
       description: "Comfortable organic cotton t-shirt with celestial designs."
@@ -304,8 +304,8 @@ export default function Shop() {
     {
       id: 3,
       name: "Mandala Art Print",
-      originalPrice: "Rs. 1299",
-      price: "Rs. 799",
+      originalPrice: "Rs. 2099",
+      price: "Rs. 1299",
       image: "/assets/tula-no-bg.png",
       alt: "Beautiful Mandala Art Print",
       description: "High-quality art print of sacred geometry mandala."
