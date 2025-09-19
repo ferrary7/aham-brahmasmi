@@ -1,3 +1,230 @@
+/* --- Custom Idea Chat Bar Section --- */
+.custom-idea-chatbar {
+  background: rgba(20, 20, 20, 0.7);
+  border: 1.5px solid rgba(212, 160, 23, 0.18);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(212, 160, 23, 0.10);
+  padding: 32px 22px 24px 22px;
+  margin: 32px 0 0 0;
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(8px);
+}
+.custom-idea-chatbar-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.custom-idea-title {
+  font-size: 1.3rem;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.custom-idea-chatbar-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  background: rgba(255,255,255,0.04);
+  border-radius: 14px;
+  border: 1.5px solid rgba(212, 160, 23, 0.22);
+  box-shadow: 0 2px 12px rgba(212,160,23,0.08);
+  padding: 0 0 0 0;
+  position: relative;
+}
+.custom-idea-chatbar-textarea {
+  flex: 1;
+  min-height: 56px;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font-size: 1.08rem;
+  font-family: inherit;
+  outline: none;
+  padding: 18px 18px 18px 18px;
+  resize: none;
+  border-radius: 14px 0 0 14px;
+  transition: box-shadow 0.3s;
+}
+.custom-idea-chatbar-textarea:focus {
+  box-shadow: 0 0 0 2px rgba(212, 160, 23, 0.10);
+}
+.custom-idea-chatbar-upload-btn {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 18px 0 0;
+  border-radius: 0 14px 14px 0;
+  height: 100%;
+  position: relative;
+}
+.custom-idea-chatbar-upload-input {
+  display: none;
+}
+.custom-idea-chatbar-upload-icon {
+  font-size: 1.5em;
+  color: var(--color-gold);
+  transition: color 0.2s, transform 0.2s;
+  margin-left: 2px;
+}
+.custom-idea-chatbar-upload-btn:hover .custom-idea-chatbar-upload-icon {
+  color: var(--color-gold-hover);
+  transform: scale(1.15);
+}
+.custom-idea-chatbar-preview {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+}
+.custom-idea-chatbar-img-wrap {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(212,160,23,0.10);
+  border: 1.5px solid var(--color-gold);
+  background: rgba(255,255,255,0.03);
+  transition: box-shadow 0.2s;
+}
+.custom-idea-chatbar-img-wrap:hover {
+  box-shadow: 0 4px 24px rgba(212,160,23,0.18);
+}
+.custom-idea-chatbar-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+@media (max-width: 768px) {
+  .custom-idea-chatbar {
+    padding: 16px 4px 12px 4px;
+    border-radius: 12px;
+  }
+  .custom-idea-title {
+    font-size: 1rem;
+  }
+  .custom-idea-chatbar-img {
+    width: 54px;
+    height: 54px;
+  }
+}
+/* --- Custom Idea & Inspiration Images Section --- */
+.custom-idea-section {
+  background: rgba(20, 20, 20, 0.7);
+  border: 1.5px solid rgba(212, 160, 23, 0.18);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(212, 160, 23, 0.10);
+  padding: 38px 28px 32px 28px;
+  margin: 32px 0 0 0;
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(8px);
+}
+.custom-idea-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.custom-idea-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+.custom-idea-icon {
+  font-size: 2.1rem;
+  color: var(--color-gold);
+  filter: drop-shadow(0 0 8px rgba(212,160,23,0.18));
+}
+.custom-idea-title {
+  font-size: 1.5rem;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.custom-idea-textarea {
+  width: 100%;
+  min-height: 80px;
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(212, 160, 23, 0.22);
+  border-radius: 12px;
+  color: var(--color-text);
+  font-size: 1.08rem;
+  font-family: inherit;
+  outline: none;
+  padding: 16px 18px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
+.custom-idea-textarea:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 2px rgba(212, 160, 23, 0.10);
+  background: rgba(255,255,255,0.07);
+}
+.custom-idea-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.custom-idea-upload-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.08rem;
+  color: var(--color-gold);
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+.custom-idea-upload-icon {
+  font-size: 1.3em;
+  margin-right: 2px;
+}
+.custom-idea-upload-input {
+  display: none;
+}
+.custom-idea-preview {
+  display: flex;
+  gap: 18px;
+  margin-top: 6px;
+}
+.custom-idea-img-wrap {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(212,160,23,0.10);
+  border: 1.5px solid var(--color-gold);
+  background: rgba(255,255,255,0.03);
+  transition: box-shadow 0.2s;
+}
+.custom-idea-img-wrap:hover {
+  box-shadow: 0 4px 24px rgba(212,160,23,0.18);
+}
+.custom-idea-img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+@media (max-width: 768px) {
+  .custom-idea-section {
+    padding: 22px 8px 18px 8px;
+    border-radius: 12px;
+  }
+  .custom-idea-title {
+    font-size: 1.1rem;
+  }
+  .custom-idea-img {
+    width: 60px;
+    height: 60px;
+  }
+}
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
 
 :root {
