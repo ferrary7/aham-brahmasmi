@@ -42,35 +42,40 @@ export default async function handler(req, res) {
           });
         }
 
-        // Clean and format private key
-        let privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-        if (privateKey && !privateKey.includes('-----BEGIN PRIVATE KEY-----')) {
-          // If it's missing headers, it might be PKCS#1 format, convert to PKCS#8
-          privateKey = `-----BEGIN PRIVATE KEY-----\n${privateKey}\n-----END PRIVATE KEY-----`;
+        // Check for required environment variables
+        if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET || !process.env.GOOGLE_REFRESH_TOKEN || !process.env.GOOGLE_SHEET_ID) {
+          console.error('Missing required environment variables:', {
+            hasClientId: !!process.env.GOOGLE_CLIENT_ID,
+            hasClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
+            hasRefreshToken: !!process.env.GOOGLE_REFRESH_TOKEN,
+            hasSheetId: !!process.env.GOOGLE_SHEET_ID
+          });
+          return res.status(500).json({
+            message: 'Server configuration error. Please contact support.'
+          });
         }
 
-        // Initialize Google Sheets API and Drive API
-        const auth = new google.auth.GoogleAuth({
-          credentials: {
-            client_email: process.env.GOOGLE_CLIENT_EMAIL,
-            private_key: privateKey,
-          },
-          scopes: [
-            'https://www.googleapis.com/auth/spreadsheets',
-            'https://www.googleapis.com/auth/drive.file'
-          ],
+        // Initialize Google OAuth2 client
+        const oauth2Client = new google.auth.OAuth2(
+          process.env.GOOGLE_CLIENT_ID,
+          process.env.GOOGLE_CLIENT_SECRET,
+          'urn:ietf:wg:oauth:2.0:oob' // For server-side apps
+        );
+
+        // Set refresh token to get access tokens
+        oauth2Client.setCredentials({
+          refresh_token: process.env.GOOGLE_REFRESH_TOKEN
         });
 
-        // Save images to public/uploads folder and get accessible URLs
-        let inspirationImageUrls = [];
+        // Use the OAuth2 client for authentication
+        const auth = oauth2Client;
+
+        // Upload images to Google Drive and get shareable links
+        let inspirationImageLinks = [];
         if (files && Object.keys(files).length > 0) {
           console.log('Files received:', Object.keys(files));
           
-          // Ensure uploads directory exists
-          const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-          if (!fs.existsSync(uploadsDir)) {
-            fs.mkdirSync(uploadsDir, { recursive: true });
-          }
+          const drive = google.drive({ version: 'v3', auth });
           
           for (const key of Object.keys(files)) {
             if (key.startsWith('inspirationImage')) {
@@ -85,43 +90,67 @@ export default async function handler(req, res) {
               }
               
               try {
-                // Get filename and create unique name
+                // Get filename 
                 const originalFilename = fileObj.originalFilename || fileObj.name || `image-${Date.now()}.jpg`;
-                const fileExtension = path.extname(originalFilename);
-                const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}${fileExtension}`;
-                const filePath = path.join(uploadsDir, fileName);
                 
-                console.log('Processing file:', {
+                console.log('Processing file for Drive upload:', {
                   key,
                   originalFilename,
-                  fileName,
                   mimetype: fileObj.mimetype,
                   size: fileObj.size,
-                  tempPath: fileObj.filepath,
-                  finalPath: filePath
+                  tempPath: fileObj.filepath
                 });
 
-                // Copy file from temp location to public/uploads
-                fs.copyFileSync(fileObj.filepath, filePath);
+                // Create unique filename
+                const uniqueFilename = `aham-brahmasmi-${Date.now()}-${originalFilename}`;
+
+                // Upload file to Google Drive (to root, no parent folder to avoid quota issues)
+                const driveResponse = await drive.files.create({
+                  requestBody: {
+                    name: uniqueFilename,
+                    // Don't specify parents - upload to root to avoid folder permission issues
+                  },
+                  media: {
+                    mimeType: fileObj.mimetype || 'image/jpeg',
+                    body: fs.createReadStream(fileObj.filepath),
+                  },
+                });
+
+                console.log('File uploaded to Drive with ID:', driveResponse.data.id);
+
+                // Make file publicly viewable
+                await drive.permissions.create({
+                  fileId: driveResponse.data.id,
+                  requestBody: {
+                    role: 'reader',
+                    type: 'anyone',
+                  },
+                });
+
+                // Get direct viewable link
+                const shareableLink = `https://drive.google.com/file/d/${driveResponse.data.id}/view`;
+                const directLink = `https://drive.google.com/uc?export=view&id=${driveResponse.data.id}`;
                 
-                // Create accessible URL (will work when deployed)
-                const imageUrl = `/uploads/${fileName}`;
+                inspirationImageLinks.push(`${originalFilename}: ${shareableLink}`);
                 
-                inspirationImageUrls.push({
+                console.log('Image uploaded to Drive successfully:', {
                   filename: originalFilename,
-                  url: imageUrl,
-                  size: fileObj.size
+                  shareableLink,
+                  directLink
                 });
+              } catch (uploadError) {
+                console.error('Error uploading image to Drive:', uploadError);
+                console.error('Drive error details:', uploadError.response?.data || uploadError.message);
                 
-                console.log('Image saved successfully:', imageUrl);
-              } catch (saveError) {
-                console.error('Error saving image:', saveError);
                 const filename = fileObj.originalFilename || fileObj.name || 'unknown';
-                inspirationImageUrls.push({
-                  filename: filename,
-                  url: `Save failed: ${saveError.message}`,
-                  size: 0
-                });
+                
+                // If it's a quota error, try without authentication (as fallback)
+                if (uploadError.message?.includes('storage quota') || uploadError.code === 403) {
+                  console.log('Storage quota issue detected, falling back to base64 reference');
+                  inspirationImageLinks.push(`${filename}: Upload failed - Storage quota exceeded`);
+                } else {
+                  inspirationImageLinks.push(`${filename}: Upload failed - ${uploadError.message}`);
+                }
               }
             }
           }
@@ -137,12 +166,6 @@ export default async function handler(req, res) {
         }
 
         // Prepare the data to append
-        const protocol = req.headers['x-forwarded-proto'] || (req.connection.encrypted ? 'https' : 'http');
-        const host = req.headers['x-forwarded-host'] || req.headers.host;
-        const baseUrl = `${protocol}://${host}`;
-        
-        const imageLinks = inspirationImageUrls.map(img => `${img.filename}: ${baseUrl}${img.url}`).join(' | ');
-        
         const values = [[
           new Date().toISOString(), // Timestamp
           name,
@@ -152,7 +175,7 @@ export default async function handler(req, res) {
           zodiacSign || '',
           address,
           customIdea || '',
-          imageLinks || 'No images uploaded'
+          inspirationImageLinks.join(' | ') || 'No images uploaded'
         ]];
 
         // Append data to Google Sheet
@@ -175,18 +198,27 @@ export default async function handler(req, res) {
 
       } catch (innerError) {
         console.error('Error processing form submission:', innerError);
+        console.error('Error stack:', innerError.stack);
+        console.error('Error details:', {
+          message: innerError.message,
+          name: innerError.name,
+          code: innerError.code
+        });
         return res.status(500).json({
           message: 'Failed to submit design request. Please try again.',
-          error: innerError.message
+          error: innerError.message,
+          details: process.env.NODE_ENV === 'development' ? innerError.stack : undefined
         });
       }
     });
 
   } catch (error) {
     console.error('Error submitting form:', error);
+    console.error('Error stack:', error.stack);
     return res.status(500).json({
       message: 'Failed to submit design request. Please try again.',
-      error: error.message
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 }
