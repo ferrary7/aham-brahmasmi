@@ -52,7 +52,7 @@ function validateCartAndCalculateTotals(cartItems) {
 
   // Calculate tax and shipping
   const tax = Math.round(subtotal * 0.05); // 5% GST
-  const shipping = subtotal > 1000 ? 0 : 100; // Free shipping above ₹1000
+  const shipping = subtotal > 1499 ? 0 : 59; // Free shipping above ₹1499
   const total = subtotal + tax + shipping;
 
   return {

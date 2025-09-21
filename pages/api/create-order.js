@@ -80,7 +80,7 @@ export default async function handler(req, res) {
     // Recalculate totals server-side for security
     const calculatedSubtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const calculatedTax = Math.round(calculatedSubtotal * 0.05);
-    const calculatedShipping = calculatedSubtotal >= 999 ? 0 : 99;
+    const calculatedShipping = calculatedSubtotal > 1499 ? 0 : 59;
     const calculatedTotal = calculatedSubtotal + calculatedTax + calculatedShipping;
 
     // Verify totals match (allow small rounding differences)
