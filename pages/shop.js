@@ -81,9 +81,9 @@ export default function Shop() {
     {
       id: 2,
       name: "Cosmic Tee",
-      price: 1299,
-      originalPrice: 1999,
-      image: "/assets/mesha-no-bg.png",
+      price: 749,
+      originalPrice: 999,
+      image: "/assets/cosmic-lion.png",
       alt: "Cosmic Tee featuring mystical patterns",
       category: "apparel",
       description: "Comfortable organic cotton t-shirt with celestial designs inspired by ancient wisdom.",
@@ -119,7 +119,7 @@ export default function Shop() {
     },
     {
       id: 5,
-      name: "Wall Paper",
+      name: "Cosmic Wall Paper",
       price: 99,
       originalPrice: 199,
       image: "/assets/cosmic-wallpaper.png",
@@ -141,11 +141,20 @@ export default function Shop() {
       return matchesFilter && matchesSearch;
     })
     .sort((a, b) => {
+      // Always put custom design first
+      if (a.id === 'custom-design') return -1;
+      if (b.id === 'custom-design') return 1;
+      
+      // Then apply the selected sorting
       switch (sortBy) {
         case 'price-low':
-          return a.price - b.price;
+          const priceA = a.isCustom && a.customOptions ? a.customOptions[0].price : a.price;
+          const priceB = b.isCustom && b.customOptions ? b.customOptions[0].price : b.price;
+          return priceA - priceB;
         case 'price-high':
-          return b.price - a.price;
+          const priceHighA = a.isCustom && a.customOptions ? a.customOptions[0].price : a.price;
+          const priceHighB = b.isCustom && b.customOptions ? b.customOptions[0].price : b.price;
+          return priceHighB - priceHighA;
         case 'name':
         default:
           return a.name.localeCompare(b.name);

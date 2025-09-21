@@ -64,6 +64,15 @@ export default function Header({ cartCount = 0 }) {
           display: flex;
           align-items: center;
           gap: 4px;
+          transition: color 0.2s ease;
+        }
+
+        .cart-link:hover {
+          color: #b37d0b;
+        }
+
+        .cart-link:hover .cart-icon {
+          filter: grayscale(0%) sepia(100%) saturate(200%) hue-rotate(30deg) brightness(1.2);
         }
         
         .cart-icon {
