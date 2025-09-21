@@ -298,8 +298,29 @@ export default function Checkout() {
         localStorage.setItem('lastPaymentId', data.paymentId);
         localStorage.setItem('lastOrderAmount', data.amount);
         
-        // Use replace instead of push to prevent back button issues
-        router.replace(`/order-success?orderId=${data.orderId}&paymentId=${data.paymentId}&amount=${data.amount}`);
+        // Enhanced navigation with multiple fallbacks
+        console.log('Navigating to order success with:', { orderId: data.orderId, paymentId: data.paymentId, amount: data.amount });
+        
+        try {
+          // Try router.replace first
+          await router.replace({
+            pathname: '/order-success',
+            query: {
+              orderId: data.orderId,
+              paymentId: data.paymentId,
+              amount: data.amount
+            }
+          });
+        } catch (routerError) {
+          console.error('Router navigation failed, using window.location:', routerError);
+          // Fallback to window.location
+          const params = new URLSearchParams({
+            orderId: data.orderId,
+            paymentId: data.paymentId,
+            amount: data.amount
+          });
+          window.location.href = `/order-success?${params.toString()}`;
+        }
       } else {
         alert('Payment verification failed. Please contact support.');
       }
@@ -848,7 +869,7 @@ export default function Checkout() {
                               marginBottom: '8px',
                               fontFamily: 'Cinzel, serif'
                             }}>
-                              Zodiac Sign *
+                              Zodiac Sign / Rashi *
                             </label>
                             <select
                               name="zodiacSign"
@@ -868,19 +889,19 @@ export default function Checkout() {
                                 transition: 'border-color 0.3s ease'
                               }}
                             >
-                              <option value="">Select your zodiac sign</option>
-                              <option value="Aries">Aries (Mar 21 - Apr 19)</option>
-                              <option value="Taurus">Taurus (Apr 20 - May 20)</option>
-                              <option value="Gemini">Gemini (May 21 - Jun 20)</option>
-                              <option value="Cancer">Cancer (Jun 21 - Jul 22)</option>
-                              <option value="Leo">Leo (Jul 23 - Aug 22)</option>
-                              <option value="Virgo">Virgo (Aug 23 - Sep 22)</option>
-                              <option value="Libra">Libra (Sep 23 - Oct 22)</option>
-                              <option value="Scorpio">Scorpio (Oct 23 - Nov 21)</option>
-                              <option value="Sagittarius">Sagittarius (Nov 22 - Dec 21)</option>
-                              <option value="Capricorn">Capricorn (Dec 22 - Jan 19)</option>
-                              <option value="Aquarius">Aquarius (Jan 20 - Feb 18)</option>
-                              <option value="Pisces">Pisces (Feb 19 - Mar 20)</option>
+                              <option value="">Select your rashi / zodiac sign</option>
+                              <option value="Aries">Aries (Mesh Rashi)</option>
+                              <option value="Taurus">Taurus (Vrishabh Rashi)</option>
+                              <option value="Gemini">Gemini (Mithun Rashi)</option>
+                              <option value="Cancer">Cancer (Kark Rashi)</option>
+                              <option value="Leo">Leo (Singh Rashi)</option>
+                              <option value="Virgo">Virgo (Kanya Rashi)</option>
+                              <option value="Libra">Libra (Tula Rashi)</option>
+                              <option value="Scorpio">Scorpio (Vrishchik Rashi)</option>
+                              <option value="Sagittarius">Sagittarius (Dhanu Rashi)</option>
+                              <option value="Capricorn">Capricorn (Makar Rashi)</option>
+                              <option value="Aquarius">Aquarius (Kumbh Rashi)</option>
+                              <option value="Pisces">Pisces (Meen Rashi)</option>
                             </select>
                             {errors.zodiacSign && (
                               <span style={{ color: '#e74c3c', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>

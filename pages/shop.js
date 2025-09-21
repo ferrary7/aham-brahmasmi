@@ -93,7 +93,7 @@ export default function Shop() {
     },
     {
       id: 3,
-      name: "Mandala Art Print",
+      name: "Cosmic Hoodie",
       price: 1299,
       originalPrice: 1999,
       image: "/assets/tula-no-bg.png",

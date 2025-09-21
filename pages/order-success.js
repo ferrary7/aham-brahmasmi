@@ -27,6 +27,8 @@ export default function OrderSuccess() {
         const currentPaymentId = router.query.paymentId;
         const currentAmount = router.query.amount;
         
+        console.log('Order success page loaded with:', { currentOrderId, currentPaymentId, currentAmount });
+        
         if (currentOrderId) {
           setOrderDetails({
             customerOrderId: currentOrderId,
@@ -39,6 +41,8 @@ export default function OrderSuccess() {
         } else {
           // If no orderId from query, try localStorage or show generic success
           const lastOrderId = typeof window !== 'undefined' ? localStorage.getItem('lastOrderId') : null;
+          console.log('No orderId in query, checking localStorage:', lastOrderId);
+          
           if (lastOrderId) {
             setOrderDetails({
               customerOrderId: lastOrderId,
@@ -47,7 +51,8 @@ export default function OrderSuccess() {
               trackingNumber: `AB${Math.random().toString(36).substr(2, 8).toUpperCase()}`
             });
           } else {
-            // Show generic success message
+            // Show generic success message - DO NOT REDIRECT
+            console.log('No order data found, showing generic success');
             setOrderDetails({
               customerOrderId: 'Processing...',
               status: 'confirmed',
@@ -56,7 +61,11 @@ export default function OrderSuccess() {
             });
           }
         }
-        setLoading(false);
+        
+        // Add a small delay to ensure smooth transition and prevent any flash redirects
+        setTimeout(() => {
+          setLoading(false);
+        }, 200);
       } catch (err) {
         console.error('Error loading order details:', err);
         setError('Failed to load order details');
@@ -67,9 +76,19 @@ export default function OrderSuccess() {
     return () => clearTimeout(timer);
   }, []); // Empty dependency array - run only once on mount
 
-  // Prevent SSR issues
+  // Prevent SSR issues and ensure the page loads
   if (typeof window === 'undefined') {
-    return null;
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        color: 'var(--color-gold)'
+      }}>
+        Loading...
+      </div>
+    );
   }
 
   return (
@@ -136,20 +155,36 @@ export default function OrderSuccess() {
                   ⚠️
                 </div>
                 <h1 style={{
-                  color: 'var(--color-primary)',
+                  color: 'var(--color-gold)',
                   fontSize: '2.5rem',
                   fontWeight: '300',
                   marginBottom: '20px'
                 }}>
-                  Order Processed!
+                  Payment Successful! ✅
                 </h1>
                 <p style={{
-                  color: 'var(--color-muted)',
+                  color: 'var(--color-text)',
                   fontSize: '1.1rem',
                   marginBottom: '30px'
                 }}>
-                  Your payment was successful. If you don't see your order details, please contact support.
+                  Your order has been confirmed and payment processed successfully. 
+                  You will receive an email confirmation shortly with your order details.
                 </p>
+                <div style={{
+                  background: 'rgba(212, 160, 23, 0.1)',
+                  border: '1px solid rgba(212, 160, 23, 0.2)',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '30px'
+                }}>
+                  <p style={{
+                    color: 'var(--color-gold)',
+                    fontSize: '0.9rem',
+                    margin: 0
+                  }}>
+                    💌 Order confirmation email will be sent to your registered email address
+                  </p>
+                </div>
               </div>
             ) : (
               <>
