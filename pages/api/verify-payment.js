@@ -124,13 +124,6 @@ export default async function handler(req, res) {
           paymentId: razorpay_payment_id
         };
 
-        console.log('Attempting to save order data to sheets:', {
-          customerName: sheetData.name,
-          orderTotal: sheetData.orderTotal,
-          orderId: sheetData.orderId,
-          itemCount: items.length
-        });
-
         // Only save basic order data here (images will be uploaded separately if needed)
         const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/save-order-data`, {
           method: 'POST',
@@ -141,17 +134,12 @@ export default async function handler(req, res) {
         });
 
         if (!response.ok) {
-          console.error('Failed to save order data to Google Sheets:', response.statusText);
           const errorText = await response.text();
-          console.error('Error details:', errorText);
           // Don't fail the payment verification if sheets save fails
         } else {
-          console.log('Order data successfully saved to Google Sheets');
           const successData = await response.json();
-          console.log('Success response:', successData);
         }
       } catch (sheetError) {
-        console.error('Error saving to Google Sheets:', sheetError);
         // Don't fail the payment verification if sheets save fails
       }
       

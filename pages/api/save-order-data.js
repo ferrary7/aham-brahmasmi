@@ -22,20 +22,8 @@ export default async function handler(req, res) {
       paymentId
     } = req.body;
 
-    // Debug: Log received data
-    console.log('Received order data for saving:', {
-      name,
-      email,
-      phone,
-      hasAddress: !!address,
-      hasOrderItems: !!orderItems,
-      orderTotal,
-      orderId
-    });
-
     // Validate required fields
     if (!name || !email || !address || !orderItems) {
-      console.log('Validation failed - missing required fields');
       return res.status(400).json({
         message: 'Name, email, address, and order items are required'
       });
@@ -54,6 +42,7 @@ export default async function handler(req, res) {
       });
     }
 
+    console.log('Setting up OAuth client...');
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
@@ -86,11 +75,26 @@ export default async function handler(req, res) {
       '' // Empty column for inspiration images (since this is order data, not design request)
     ];
 
+    // Test authentication first
+    try {
+      const testResponse = await sheets.spreadsheets.get({
+        spreadsheetId
+      });
+    } catch (authError) {
+      return res.status(500).json({
+        message: 'Google Sheets authentication failed',
+        error: authError.message,
+        code: authError.code,
+        debug: 'Failed to access spreadsheet - check credentials'
+      });
+    }
+
     // Append the data to the sheet
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId,
       range: 'Sheet1!A:N', // Adjust range as needed
       valueInputOption: 'USER_ENTERED',
+      insertDataOption: 'INSERT_ROWS',
       resource: {
         values: [rowData]
       }
@@ -103,11 +107,11 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error('Error saving order data:', error);
     return res.status(500).json({
       message: 'Failed to save order data',
       error: error.message,
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      errorCode: error.code,
+      errorStatus: error.status
     });
   }
 }

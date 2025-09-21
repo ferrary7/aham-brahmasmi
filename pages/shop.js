@@ -99,7 +99,7 @@ export default function Shop() {
       image: "/assets/tula-no-bg.png",
       alt: "Beautiful Mandala Art Print",
       category: "art",
-      description: "High-quality art print of sacred geometry mandala. Perfect for meditation spaces.",
+      description: "High-quality illustration of sacred geometry over our hoodie. Perfect for postive winter.",
       sizes: ["XS", "S", "M", "L", "XL", "XXL"],
       inStock: true,
       featured: false
@@ -112,7 +112,7 @@ export default function Shop() {
       image: "/assets/tank-top.png",
       alt: "Beautiful Tank Top",
       category: "art",
-      description: "High-quality tank top featuring sacred geometry mandala. Perfect for warm weather and meditation.",
+      description: "High-quality tank top featuring sacred geometry mandala. Perfect for warm weather.",
       sizes: ["XS", "S", "M", "L", "XL", "XXL"],
       inStock: true,
       featured: false
@@ -129,7 +129,7 @@ export default function Shop() {
       sizes: ["3:2", "1:1"],
       inStock: true,
       featured: false
-    },
+    }
   ];
 
   // Filter and sort products

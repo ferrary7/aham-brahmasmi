@@ -205,7 +205,7 @@ export default function OrderSuccess() {
                 <li>We'll send you an email confirmation shortly</li>
                 <li>Your items will be carefully packaged and shipped</li>
                 <li>You'll receive tracking information via email</li>
-                <li>Expected delivery within 5-7 business days</li>
+                <li>Expected delivery within 8-10 business days</li>
               </ul>
             </div>
 
