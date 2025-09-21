@@ -283,17 +283,10 @@ export default function OrderSuccess() {
               }}>
                 Need help with your order? Contact us at{' '}
                 <a 
-                  href="mailto:support@ahambrahmasmi.com"
+                  href="mailto:brahmasmi.store@gmail.com"
                   style={{ color: 'var(--color-gold)', textDecoration: 'none' }}
                 >
-                  support@ahambrahmasmi.com
-                </a>
-                {' '}or call us at{' '}
-                <a 
-                  href="tel:+919876543210"
-                  style={{ color: 'var(--color-gold)', textDecoration: 'none' }}
-                >
-                  +91 98765 43210
+                  brahmasmi.store@gmail.com
                 </a>
               </p>
             </div>

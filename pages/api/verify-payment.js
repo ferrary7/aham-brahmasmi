@@ -125,7 +125,13 @@ export default async function handler(req, res) {
         };
 
         // Only save basic order data here (images will be uploaded separately if needed)
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/save-order-data`, {
+        const apiUrl = process.env.NEXT_PUBLIC_SITE_URL 
+          ? `${process.env.NEXT_PUBLIC_SITE_URL}/api/save-order-data`
+          : 'http://localhost:3000/api/save-order-data';
+          
+        console.log('🔗 Calling save-order-data API at:', apiUrl);
+        
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -133,11 +139,15 @@ export default async function handler(req, res) {
           body: JSON.stringify(sheetData)
         });
 
+        console.log('🔍 Save order data response status:', response.status);
+
         if (!response.ok) {
           const errorText = await response.text();
+          console.error('❌ Failed to save order data:', errorText);
           // Don't fail the payment verification if sheets save fails
         } else {
           const successData = await response.json();
+          console.log('✅ Order data saved successfully:', successData);
         }
       } catch (sheetError) {
         // Don't fail the payment verification if sheets save fails
