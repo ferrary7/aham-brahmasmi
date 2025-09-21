@@ -11,6 +11,7 @@ export default function Checkout() {
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1); // 1: Customer Details, 2: Payment
   const [isCartLoaded, setIsCartLoaded] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   
   const totals = calculateTotals();
 
@@ -43,13 +44,14 @@ export default function Checkout() {
     // Give some time for cart context to initialize from localStorage
     const timer = setTimeout(() => {
       setIsCartLoaded(true);
-      if (items.length === 0) {
+      // Only redirect to shop if cart is empty AND we're not processing a payment
+      if (items.length === 0 && !isLoading && !isProcessingPayment) {
         router.push('/shop');
       }
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [items, router]);
+  }, [items, router, isLoading, isProcessingPayment]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -210,7 +212,8 @@ export default function Checkout() {
       description: 'Cosmic Collection Purchase',
       order_id: orderId,
       handler: function (response) {
-        // Payment successful
+        // Payment successful - set flag to prevent cart empty redirect
+        setIsProcessingPayment(true);
         handlePaymentSuccess(response);
       },
       prefill: {
@@ -223,6 +226,7 @@ export default function Checkout() {
       },
       modal: {
         ondismiss: function() {
+          setIsProcessingPayment(false);
           alert('Payment cancelled. Your cart is still saved.');
         }
       }
@@ -311,6 +315,8 @@ export default function Checkout() {
               amount: data.amount
             }
           });
+          // Clear the processing flag after successful navigation
+          setIsProcessingPayment(false);
         } catch (routerError) {
           console.error('Router navigation failed, using window.location:', routerError);
           // Fallback to window.location
@@ -320,12 +326,15 @@ export default function Checkout() {
             amount: data.amount
           });
           window.location.href = `/order-success?${params.toString()}`;
+          // No need to clear flag here since we're leaving the page
         }
       } else {
+        setIsProcessingPayment(false);
         alert('Payment verification failed. Please contact support.');
       }
     } catch (error) {
       console.error('Payment verification error:', error);
+      setIsProcessingPayment(false);
       alert('Error verifying payment. Please contact support.');
     }
   };
