@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     for (const item of items) {
       if (!item.id || !item.name || !item.price || !item.quantity || !item.size) {
         return res.status(400).json({ 
-          message: 'Invalid item data' 
+          message: 'Invalid item data - missing required fields'
         });
       }
       
