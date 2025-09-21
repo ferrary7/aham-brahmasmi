@@ -129,6 +129,19 @@ export default function Shop() {
       sizes: ["3:2", "1:1"],
       inStock: true,
       featured: false
+    },
+    {
+      id: 6,
+      name: "Cosmic Wall Paper",
+      price: 0,
+      originalPrice: 199,
+      image: "/assets/cosmic-wallpaper.png",
+      alt: "Beautiful Wall Paper",
+      category: "art",
+      description: "Get high-quality wall paper designs of sacred geometry mandala. Perfect for meditation spaces.",
+      sizes: ["3:2", "1:1"],
+      inStock: true,
+      featured: false
     }
   ];
 

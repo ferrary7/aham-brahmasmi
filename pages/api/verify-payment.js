@@ -159,6 +159,7 @@ export default async function handler(req, res) {
         orderId: customerOrderId,
         paymentId: razorpay_payment_id,
         amount: payment.amount / 100,
+        redirectUrl: `/order-success?orderId=${customerOrderId}&paymentId=${razorpay_payment_id}&amount=${payment.amount / 100}`,
         orderDetails: {
           customerOrderId,
           razorpayOrderId: razorpay_order_id,

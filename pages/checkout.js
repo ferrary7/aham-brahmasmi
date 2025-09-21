@@ -292,7 +292,14 @@ export default function Checkout() {
         
         // Clear cart and redirect to success page
         clearCart();
-        router.push(`/order-success?orderId=${data.orderId}`);
+        
+        // Store order ID in localStorage as backup
+        localStorage.setItem('lastOrderId', data.orderId);
+        localStorage.setItem('lastPaymentId', data.paymentId);
+        localStorage.setItem('lastOrderAmount', data.amount);
+        
+        // Use replace instead of push to prevent back button issues
+        router.replace(`/order-success?orderId=${data.orderId}&paymentId=${data.paymentId}&amount=${data.amount}`);
       } else {
         alert('Payment verification failed. Please contact support.');
       }

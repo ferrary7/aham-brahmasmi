@@ -7,23 +7,67 @@ import { useCart } from '../context/CartContext';
 
 export default function OrderSuccess() {
   const router = useRouter();
-  const { orderId } = router.query;
-  const { itemCount } = useCart();
+  const { orderId, paymentId, amount } = router.query;
+  const { itemCount, clearCart } = useCart();
   const [orderDetails, setOrderDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // In a real application, you would fetch order details from your backend
-    // For now, we'll simulate this with localStorage or query params
-    if (orderId) {
-      // Simulate order details
-      setOrderDetails({
-        customerOrderId: orderId,
-        status: 'confirmed',
-        estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        trackingNumber: `AB${Math.random().toString(36).substr(2, 8).toUpperCase()}`
-      });
+    // Clear cart when order is successful
+    if (typeof window !== 'undefined') {
+      clearCart();
     }
-  }, [orderId]);
+  }, [clearCart]);
+
+  useEffect(() => {
+    // Delay loading to ensure router is ready
+    const timer = setTimeout(() => {
+      try {
+        if (orderId) {
+          setOrderDetails({
+            customerOrderId: orderId,
+            paymentId: paymentId || 'N/A',
+            amount: amount || 'N/A',
+            status: 'confirmed',
+            estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            trackingNumber: `AB${Math.random().toString(36).substr(2, 8).toUpperCase()}`
+          });
+        } else {
+          // If no orderId from query, try localStorage or show generic success
+          const lastOrderId = typeof window !== 'undefined' ? localStorage.getItem('lastOrderId') : null;
+          if (lastOrderId) {
+            setOrderDetails({
+              customerOrderId: lastOrderId,
+              status: 'confirmed',
+              estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+              trackingNumber: `AB${Math.random().toString(36).substr(2, 8).toUpperCase()}`
+            });
+          } else {
+            // Show generic success message
+            setOrderDetails({
+              customerOrderId: 'Processing...',
+              status: 'confirmed',
+              estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+              trackingNumber: 'Will be provided via email'
+            });
+          }
+        }
+        setLoading(false);
+      } catch (err) {
+        console.error('Error loading order details:', err);
+        setError('Failed to load order details');
+        setLoading(false);
+      }
+    }, 100); // Small delay to ensure router is ready
+
+    return () => clearTimeout(timer);
+  }, [orderId, paymentId, amount]);
+
+  // Prevent SSR issues
+  if (typeof window === 'undefined') {
+    return null;
+  }
 
   return (
     <>
@@ -49,6 +93,63 @@ export default function OrderSuccess() {
             maxWidth: '600px',
             textAlign: 'center'
           }}>
+            {loading ? (
+              <div>
+                <div style={{
+                  width: '120px',
+                  height: '120px',
+                  margin: '0 auto 40px',
+                  background: 'rgba(212, 160, 23, 0.2)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '2rem'
+                }}>
+                  ⏳
+                </div>
+                <h1 style={{
+                  color: 'var(--color-primary)',
+                  fontSize: '2.5rem',
+                  fontWeight: '300',
+                  marginBottom: '20px'
+                }}>
+                  Loading Order Details...
+                </h1>
+              </div>
+            ) : error ? (
+              <div>
+                <div style={{
+                  width: '120px',
+                  height: '120px',
+                  margin: '0 auto 40px',
+                  background: 'rgba(255, 0, 0, 0.2)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '2rem'
+                }}>
+                  ⚠️
+                </div>
+                <h1 style={{
+                  color: 'var(--color-primary)',
+                  fontSize: '2.5rem',
+                  fontWeight: '300',
+                  marginBottom: '20px'
+                }}>
+                  Order Processed!
+                </h1>
+                <p style={{
+                  color: 'var(--color-muted)',
+                  fontSize: '1.1rem',
+                  marginBottom: '30px'
+                }}>
+                  Your payment was successful. If you don't see your order details, please contact support.
+                </p>
+              </div>
+            ) : (
+              <>
             {/* Success Animation/Icon */}
             <div style={{
               width: '120px',
@@ -216,7 +317,15 @@ export default function OrderSuccess() {
               flexWrap: 'wrap'
             }}>
               <button
-                onClick={() => router.push('/shop')}
+                onClick={() => {
+                  try {
+                    router.push('/shop').catch(() => {
+                      window.location.href = '/shop';
+                    });
+                  } catch (err) {
+                    window.location.href = '/shop';
+                  }
+                }}
                 style={{
                   padding: '14px 28px',
                   background: 'var(--color-gold)',
@@ -242,7 +351,15 @@ export default function OrderSuccess() {
               </button>
 
               <button
-                onClick={() => router.push('/')}
+                onClick={() => {
+                  try {
+                    router.push('/').catch(() => {
+                      window.location.href = '/';
+                    });
+                  } catch (err) {
+                    window.location.href = '/';
+                  }
+                }}
                 style={{
                   padding: '14px 28px',
                   background: 'transparent',
@@ -290,6 +407,8 @@ export default function OrderSuccess() {
                 </a>
               </p>
             </div>
+            </>
+            )}
           </div>
         </section>
       </main>
