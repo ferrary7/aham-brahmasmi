@@ -317,7 +317,6 @@ h1, h2, h3, h4, h5, h6 {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 
 .btn-gold {
@@ -682,7 +681,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Shop Page Styles */
+/* Request Design Page Styles */
 .shop-showcase {
   background-color: var(--color-bg);
   min-height: 100vh;
@@ -707,7 +706,7 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateX(-30px);
 }
 
-/* Shop Page Mobile Responsive */
+/* Request Design Page Mobile Responsive */
 @media (max-width: 1024px) {
   .shop-showcase {
     flex-direction: column;

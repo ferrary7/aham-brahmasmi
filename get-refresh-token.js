@@ -2,8 +2,9 @@ const { google } = require('googleapis');
 const readline = require('readline');
 
 // Your OAuth credentials from Google Cloud Console
-const CLIENT_ID = '1037743269429-o7viqo4gmlfak63k6lcufee3mihlh7km.apps.googleusercontent.com';
-const CLIENT_SECRET = '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';
+// Load from environment variables for security
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID || 'your_google_client_id_here';
+const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || 'your_google_client_secret_here';
 
 // Use the OAuth Playground redirect URI since it should be authorized
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground';

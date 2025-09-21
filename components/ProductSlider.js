@@ -131,7 +131,7 @@ export default function ProductSlider({ products }) {
               objectFit: 'cover',
               cursor: 'pointer',
             }}
-            onClick={() => window.location.href = '/shop'}
+            onClick={() => window.location.href = '/request-your-own-design'}
           />
         </div>
       ) : (
@@ -174,7 +174,7 @@ export default function ProductSlider({ products }) {
                     transition: 'all 0.3s ease',
                     cursor: 'pointer',
                   }}
-                  onClick={() => window.location.href = '/shop'}
+                  onClick={() => window.location.href = '/request-your-own-design'}
                 />
               </div>
             );

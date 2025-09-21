@@ -1,14 +1,4 @@
 export default function Hero() {
-  const scrollToCollection = () => {
-    const collectionSection = document.getElementById('cosmic-collection');
-    if (collectionSection) {
-      collectionSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  };
-
   return (
     <section className="hero">
       <div className="mandala-bg"></div>
@@ -20,7 +10,7 @@ export default function Hero() {
         <p className="hero-sub">Cosmic Merchandise crafted uniquely for your soul.</p>
 
         <div className="hero-ctas">
-          <button onClick={scrollToCollection} className="btn-gold-outline" style={{
+          <a href="/shop" className="btn-gold-outline" style={{
             background: 'transparent',
             color: 'var(--color-gold)',
             border: '2px solid var(--color-gold)',
@@ -28,11 +18,13 @@ export default function Hero() {
             borderRadius: '6px',
             fontWeight: '700',
             cursor: 'pointer',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            textDecoration: 'none',
+            display: 'inline-block'
           }}>
-            DISCOVER YOUR DESIGN
-          </button>
-          <a href="/shop" className="btn-gold">SHOP NOW</a>
+            SHOP NOW
+          </a>
+          <a href="/shop?highlight=custom-design" className="btn-gold">CUSTOM DESIGN</a>
         </div>
       </div>
       <div className="hero-overlay" />

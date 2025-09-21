@@ -3,8 +3,10 @@ import Header from '../components/Header';
 import Hero from '../components/Hero';
 import ProductSlider from '../components/ProductSlider';
 import Footer from '../components/Footer';
+import { useCart } from '../context/CartContext';
 
 export default function Home() {
+  const { itemCount } = useCart();
   // Use 4 distinct products for the cosmic collection; include the newly added front-no-bg image
   const products = [
     {
@@ -46,7 +48,7 @@ export default function Home() {
         <link rel="icon" href="/assets/favicon-16x16.png" />
       </Head>
 
-      <Header />
+      <Header cartCount={itemCount} />
       
       <main>
         <Hero />
@@ -266,13 +268,33 @@ export default function Home() {
             <ProductSlider products={products} />
 
             <div style={{ textAlign: 'center', marginTop: '80px' }}>
-              <a href="/shop" className="btn-gold" style={{
-                padding: '16px 32px',
-                fontSize: '1.1rem',
-                fontWeight: '600'
+              <div style={{ 
+                display: 'flex', 
+                gap: '20px', 
+                justifyContent: 'center',
+                flexWrap: 'wrap'
               }}>
-                EXPLORE ALL PRODUCTS
-              </a>
+                <a href="/shop" className="btn-gold-outline" style={{
+                  padding: '16px 32px',
+                  fontSize: '1.1rem',
+                  fontWeight: '600',
+                  background: 'transparent',
+                  color: 'var(--color-gold)',
+                  border: '2px solid var(--color-gold)',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s ease'
+                }}>
+                  SHOP COLLECTION
+                </a>
+                <a href="/shop?highlight=custom-design" className="btn-gold" style={{
+                  padding: '16px 32px',
+                  fontSize: '1.1rem',
+                  fontWeight: '600'
+                }}>
+                  REQUEST CUSTOM DESIGN
+                </a>
+              </div>
             </div>
           </div>
         </section>
