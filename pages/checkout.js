@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -12,6 +12,9 @@ export default function Checkout() {
   const [step, setStep] = useState(1); // 1: Customer Details, 2: Payment
   const [isCartLoaded, setIsCartLoaded] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  
+  // Ref for payment section to scroll to
+  const paymentSectionRef = useRef(null);
   
   const totals = calculateTotals();
 
@@ -159,9 +162,29 @@ export default function Checkout() {
         // Form validation passed, proceed to payment step
         // Customer data and images will be saved after successful payment
         setStep(2); // Move to payment step
+        
+        // Scroll to payment section after a short delay to allow UI to update
+        setTimeout(() => {
+          if (paymentSectionRef.current) {
+            paymentSectionRef.current.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        }, 100);
       } catch (error) {
         console.error('Error proceeding to payment:', error);
         setStep(2);
+        
+        // Still scroll to payment section even on error
+        setTimeout(() => {
+          if (paymentSectionRef.current) {
+            paymentSectionRef.current.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        }, 100);
       } finally {
         setIsLoading(false);
       }
@@ -1112,7 +1135,7 @@ export default function Checkout() {
                   </div>
                 ) : (
                   /* Payment Step */
-                  <div>
+                  <div ref={paymentSectionRef}>
                     <h2 style={{
                       color: 'var(--color-gold)',
                       fontSize: '1.8rem',
