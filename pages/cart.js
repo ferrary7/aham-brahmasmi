@@ -269,14 +269,16 @@ export default function Cart() {
                       <span>Shipping</span>
                       <span>
                         {totals.shipping === 0 ? (
-                          <span style={{ color: 'var(--color-gold)' }}>FREE</span>
+                          <span style={{ color: 'var(--color-gold)' }}>
+                            {totals.hasDigitalProducts ? 'DIGITAL DELIVERY' : 'FREE'}
+                          </span>
                         ) : (
                           `₹${totals.shipping}`
                         )}
                       </span>
                     </div>
 
-                    {totals.shipping > 0 && (
+                    {totals.shipping > 0 ? (
                       <div style={{
                         fontSize: '0.8rem',
                         color: 'var(--color-muted)',
@@ -285,7 +287,16 @@ export default function Cart() {
                       }}>
                         Free shipping on orders above ₹1499
                       </div>
-                    )}
+                    ) : totals.hasDigitalProducts ? (
+                      <div style={{
+                        fontSize: '0.8rem',
+                        color: 'var(--color-gold)',
+                        fontStyle: 'italic',
+                        marginBottom: '12px'
+                      }}>
+                        Digital products delivered via email
+                      </div>
+                    ) : null}
                     
                     <div style={{
                       borderTop: '1px solid rgba(212, 160, 23, 0.2)',

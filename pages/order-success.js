@@ -7,7 +7,6 @@ import { useCart } from '../context/CartContext';
 
 export default function OrderSuccess() {
   const router = useRouter();
-  const { orderId, paymentId, amount } = router.query;
   const { itemCount, clearCart } = useCart();
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,11 +23,15 @@ export default function OrderSuccess() {
     // Delay loading to ensure router is ready
     const timer = setTimeout(() => {
       try {
-        if (orderId) {
+        const currentOrderId = router.query.orderId;
+        const currentPaymentId = router.query.paymentId;
+        const currentAmount = router.query.amount;
+        
+        if (currentOrderId) {
           setOrderDetails({
-            customerOrderId: orderId,
-            paymentId: paymentId || 'N/A',
-            amount: amount || 'N/A',
+            customerOrderId: currentOrderId,
+            paymentId: currentPaymentId || 'N/A',
+            amount: currentAmount || 'N/A',
             status: 'confirmed',
             estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
             trackingNumber: `AB${Math.random().toString(36).substr(2, 8).toUpperCase()}`
@@ -62,7 +65,7 @@ export default function OrderSuccess() {
     }, 100); // Small delay to ensure router is ready
 
     return () => clearTimeout(timer);
-  }, [orderId, paymentId, amount]);
+  }, []); // Empty dependency array - run only once on mount
 
   // Prevent SSR issues
   if (typeof window === 'undefined') {

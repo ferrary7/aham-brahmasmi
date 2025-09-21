@@ -190,14 +190,30 @@ export function CartProvider({ children }) {
   const calculateTotals = () => {
     const subtotal = state.total;
     const tax = Math.round(subtotal * 0.05); // 5% GST
-    const shipping = subtotal > 1499 ? 0 : 59; // Free shipping above 1499
+    
+    // Check if cart contains any digital products (price under ₹100)
+    const hasDigitalProducts = state.items.some(item => item.price < 100);
+    
+    let shipping = 0;
+    if (hasDigitalProducts) {
+      // No shipping for digital products (delivered via email)
+      shipping = 0;
+    } else if (subtotal > 1499) {
+      // Free shipping above ₹1499 for physical products
+      shipping = 0;
+    } else {
+      // ₹59 shipping for physical products under ₹1499
+      shipping = 59;
+    }
+    
     const total = subtotal + tax + shipping;
 
     return {
       subtotal,
       tax,
       shipping,
-      total
+      total,
+      hasDigitalProducts // Include this info for UI display
     };
   };
 

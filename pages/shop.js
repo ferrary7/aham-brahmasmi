@@ -129,19 +129,6 @@ export default function Shop() {
       sizes: ["3:2", "1:1"],
       inStock: true,
       featured: false
-    },
-    {
-      id: 6,
-      name: "Sacred Blessing Sticker",
-      price: 1,
-      originalPrice: 199,
-      image: "/assets/cosmic-wallpaper.png",
-      alt: "Sacred Blessing Sticker",
-      category: "art",
-      description: "Get high-quality sticker designs of sacred geometry mandala. Perfect for meditation spaces.",
-      sizes: ["Small", "Medium"],
-      inStock: true,
-      featured: false
     }
   ];
 

@@ -80,7 +80,22 @@ export default async function handler(req, res) {
     // Recalculate totals server-side for security
     const calculatedSubtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const calculatedTax = Math.round(calculatedSubtotal * 0.05);
-    const calculatedShipping = calculatedSubtotal > 1499 ? 0 : 59;
+    
+    // Check if cart contains any digital products (price under ₹100)
+    const hasDigitalProducts = items.some(item => item.price < 100);
+    
+    let calculatedShipping = 0;
+    if (hasDigitalProducts) {
+      // No shipping for digital products (delivered via email)
+      calculatedShipping = 0;
+    } else if (calculatedSubtotal > 1499) {
+      // Free shipping above ₹1499 for physical products
+      calculatedShipping = 0;
+    } else {
+      // ₹59 shipping for physical products under ₹1499
+      calculatedShipping = 59;
+    }
+    
     const calculatedTotal = calculatedSubtotal + calculatedTax + calculatedShipping;
 
     // Verify totals match (allow small rounding differences)

@@ -1328,7 +1328,9 @@ export default function Checkout() {
                     <span>Shipping</span>
                     <span>
                       {totals.shipping === 0 ? (
-                        <span style={{ color: 'var(--color-gold)' }}>FREE</span>
+                        <span style={{ color: 'var(--color-gold)' }}>
+                          {totals.hasDigitalProducts ? 'DIGITAL DELIVERY' : 'FREE'}
+                        </span>
                       ) : (
                         `₹${totals.shipping}`
                       )}
